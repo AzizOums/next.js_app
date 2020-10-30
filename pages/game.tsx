@@ -2,6 +2,7 @@ import React from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 
+//types des props et states des components
 interface IProps {
   name: string;
 }
@@ -18,10 +19,20 @@ interface IButtonProps {
   onClick: (e: string) => void;
 }
 
+interface IBoardProps {
+  click: (e: string) => void;
+}
+
+interface IRestartButtonProps {
+  win: boolean;
+  click: () => void;
+}
+
 interface IButtonState {
   disabled: boolean;
 }
 
+//components
 class MyButton extends React.Component<IButtonProps, IButtonState> {
   constructor(props: IButtonProps) {
     super(props);
@@ -51,7 +62,7 @@ class MyButton extends React.Component<IButtonProps, IButtonState> {
   }
 }
 
-const Board: React.FC<any> = (props) => {
+const Board: React.FC<IBoardProps> = (props) => {
   const btn = getButtons(props.click);
   return (
     <div className={styles.card}>
@@ -68,22 +79,24 @@ const Board: React.FC<any> = (props) => {
   );
 };
 
-const RestartElement: React.FC<any> = (props) => {
+const RestartElement: React.FC<IRestartButtonProps> = (props) => {
+  const { win, click } = props;
   return (
     <div>
-      <p>You {props.win ? "Win" : "Lose"} !</p>
-      <MyButton text="Restart" onClick={props.click} />
+      <p>Vous avez {win ? "Gagné" : "Perdu"} !</p>
+      <MyButton text="recommencer" onClick={click} />
     </div>
   );
 };
 
+//classe representant le jeu
 class Game extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     start();
     this.state = {
       charList: charList,
-      compteur: 0,
+      compteur: 5,
       win: false,
       lose: false,
     };
@@ -95,7 +108,7 @@ class Game extends React.Component<IProps, IState> {
     start();
     this.setState({
       charList: charList,
-      compteur: 0,
+      compteur: 5,
       win: false,
       lose: false,
     });
@@ -103,12 +116,12 @@ class Game extends React.Component<IProps, IState> {
 
   click(e: string): void {
     const checked = check(e);
-    const { compteur, win, lose } = this.state;
+    const { compteur } = this.state;
     this.setState({
       charList: charList,
-      compteur: checked ? compteur : compteur + 1,
+      compteur: checked ? compteur : compteur - 1,
       win: playerWins(),
-      lose: compteur >= 5,
+      lose: compteur <= 0,
     });
   }
 
@@ -129,12 +142,15 @@ class Game extends React.Component<IProps, IState> {
           <h1 className={styles.title}>Bienvenu dans le jeu du pendu</h1>
 
           <p className={styles.description}>
-            c'est un jeu ou vous devez deviner un mot tiré au sort <br />
-            avec le moins de tentatives possible !
+            Vous devez deviner un mot tiré au sort parmis une liste de noms de
+            superheros et de personnages de mangas <br />
+            Avec le moins de tentatives que possible !
           </p>
           {jsx}
-          <p>Compteur: {compteur}</p>
-          <p>Mot: {charList.join(" ")}</p>
+          <div>
+            <p>Essaies restants: {compteur}</p>
+            <p>Mot: {charList.join(" ")}</p>
+          </div>
         </main>
 
         <footer className={styles.footer}>
@@ -145,7 +161,8 @@ class Game extends React.Component<IProps, IState> {
   }
 }
 
-const wordList = [
+//fonctions du jeu
+const wordList: string[] = [
   "spiderman",
   "batman",
   "superman",
@@ -163,10 +180,10 @@ const wordList = [
   "shanks",
 ];
 
-let word;
+let word: string;
 let charList: string[];
 
-const start = () => {
+const start = (): void => {
   word = wordList[
     Math.floor((1 + Math.random() * 100) % wordList.length)
   ].toUpperCase();
@@ -176,7 +193,7 @@ const start = () => {
   }
 };
 
-const check = (e: string) => {
+const check = (e: string): boolean => {
   let test = false;
   for (let i = 0; i < word.length; i++)
     if (word.charAt(i).charCodeAt(0) === e.charCodeAt(0)) {
@@ -186,7 +203,7 @@ const check = (e: string) => {
   return test;
 };
 
-const playerWins = () => {
+const playerWins = (): boolean => {
   let test = true;
   for (let i = 0; i < word.length; i++)
     if (word.charAt(i).charCodeAt(0) !== charList[i].charCodeAt(0))
@@ -194,7 +211,7 @@ const playerWins = () => {
   return test;
 };
 
-const lettres = () => {
+const lettres = (): string[] => {
   const ls = [];
   for (let i = 0; i < 26; i++) {
     ls.push(String.fromCharCode("A".charCodeAt(0) + i));
@@ -202,7 +219,7 @@ const lettres = () => {
   return ls;
 };
 
-const getButtons = (onClick) => {
+const getButtons = (onClick): React.Component[] => {
   const buttons = [];
   for (let i = 0; i < lettres().length; i++) {
     const e = lettres()[i];
