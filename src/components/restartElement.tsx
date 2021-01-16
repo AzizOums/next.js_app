@@ -5,8 +5,10 @@ interface IRestartButtonProps {
   click: () => void;
 }
 
-const RestartElement: React.FC<IRestartButtonProps> = (props) => {
-  const { win, click } = props;
+const RestartElement: React.FC<IRestartButtonProps> = ({
+  win,
+  click,
+}: IRestartButtonProps) => {
   return (
     <div>
       <p>Vous avez {win ? "Gagné" : "Perdu"} !</p>

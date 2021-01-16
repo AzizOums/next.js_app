@@ -1,34 +1,19 @@
 import React, { useState } from "react";
+
 import Head from "next/head";
+
 import styles from "../../styles/Home.module.css";
 
 import Board from "../../components/board";
 import RestartElement from "../../components/restartElement";
-import tools from "../../tools";
+
+import tools from "../../utils.ts";
+import { Card, Row } from "react-bootstrap";
 
 let { getRandomWord, playerWins, check } = tools;
 
-//fonctions du jeu
-const wordList: string[] = [
-  "spiderman",
-  "batman",
-  "superman",
-  "ironman",
-  "captainamerica",
-  "hulk",
-  "flash",
-  "arrow",
-  "naruto",
-  "goku",
-  "jotaro",
-  "dio",
-  "luffy",
-  "sanji",
-  "shanks",
-];
-
-let word: string;
-let charList: string[];
+let word: string = "";
+let charList: string[] = [];
 
 const start = (): void => {
   const data = getRandomWord();
@@ -66,16 +51,6 @@ const Game: React.FC<{}> = () => {
     counter: 5,
   });
 
-  const jsx = !(state.win || state.lose) ? (
-    <Board
-      click={(e) => {
-        click(e, setState);
-      }}
-    />
-  ) : (
-    <RestartElement win={state.win} click={() => restart(setState)} />
-  );
-
   return (
     <div className={styles.container}>
       <Head>
@@ -83,18 +58,40 @@ const Game: React.FC<{}> = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Bienvenu dans le jeu du pendu</h1>
-
-        <p className={styles.description}>
-          Vous devez deviner un mot tiré au sort parmis une liste de noms de
-          superheros et de personnages de mangas <br />
-          Avec le moins de tentatives que possible !
-        </p>
-        <div>
-          {jsx}
-          <p>Essaies restants: {state.counter}</p>
-          <p>Mot: {charList.join(" ")}</p>
-        </div>
+        <h1>Bienvenu dans le jeu du pendu</h1>
+        <Card bg="secondary" style={{ maxWidth: 700 }}>
+          <Card.Header>
+            <p style={{ textAlign: "center" }}>
+              Vous devez deviner un mot tiré au sort parmis une liste de noms de
+              superheros et de personnages de mangas. Avec le moins de
+              tentatives que possible !
+            </p>
+            <Row style={{ justifyContent: "center", fontSize: 50 }}>
+              {charList.join(" ")}
+            </Row>
+          </Card.Header>
+          <Card.Body>
+            {state.win || state.lose ? (
+              <Row style={{ justifyContent: "center" }}>
+                <RestartElement
+                  win={state.win}
+                  click={() => restart(setState)}
+                />
+              </Row>
+            ) : (
+              <>
+                <Board
+                  click={(e) => {
+                    click(e, setState);
+                  }}
+                />
+                <Row style={{ justifyContent: "center" }}>
+                  Essaies restants: {state.counter}
+                </Row>
+              </>
+            )}
+          </Card.Body>
+        </Card>
       </main>
 
       <footer className={styles.footer}>

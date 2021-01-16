@@ -25,8 +25,7 @@ const randomWord = (req: NextApiRequest, res: NextApiResponse): void => {
     Math.floor((1 + Math.random() * 100) % wordList.length)
   ].toUpperCase();
 
-  res.statusCode = 200;
-  res.json({ word: word });
+  res.status(200).send({ word: word });
 };
 
 export default randomWord;

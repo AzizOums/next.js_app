@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "react-bootstrap";
 
 interface IProps {
   text: string;
@@ -6,24 +7,25 @@ interface IProps {
 }
 
 const MyButton: React.FC<IProps> = ({ text, onClick }) => {
-  const [state, setState] = useState({ disabled: false });
+  const [disabled, setDisabled] = useState(false);
 
-  const { disabled } = state;
-  const jsx = disabled ? (
-    <button disabled>
-      <p>{text}</p>
-    </button>
-  ) : (
-    <button
+  return (
+    <Button
+      variant="light"
       onClick={() => {
-        setState({ disabled: true });
+        setDisabled(true);
         onClick(text);
       }}
+      style={{
+        margin: 2,
+        minWidth: 40,
+        height: 40,
+      }}
+      disabled={disabled}
     >
-      <p>{text}</p>
-    </button>
+      {text}
+    </Button>
   );
-  return jsx;
 };
 
 export default MyButton;

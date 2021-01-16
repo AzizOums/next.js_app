@@ -1,5 +1,3 @@
-import MyButton from "../components/mybutton";
-
 const wordList: string[] = [
   "spiderman",
   "batman",
@@ -50,26 +48,14 @@ const playerWins = (word: string, charList: string[]): boolean => {
   return test;
 };
 
-const lettres = (): string[] => {
-  const ls = [];
+const getLetters = (): string[] => {
+  const list = [];
   for (let i = 0; i < 26; i++) {
-    ls.push(String.fromCharCode("A".charCodeAt(0) + i));
+    list.push(String.fromCharCode("A".charCodeAt(0) + i));
   }
-  return ls;
+  return list;
 };
 
-const getButtons = (onClick): React.Component[] => {
-  const buttons = [];
-  for (let i = 0; i < lettres().length; i++) {
-    const e = lettres()[i];
-    buttons.push(<MyButton text={e} onClick={onClick} />);
-  }
-  return buttons;
-};
+export { getRandomWord, playerWins, getLetters, check };
 
-export default {
-  getRandomWord,
-  playerWins,
-  getButtons,
-  check,
-};
+export default { getRandomWord, playerWins, getLetters, check };
