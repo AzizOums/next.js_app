@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 
+import { Card, Row } from "react-bootstrap";
+
 import Head from "next/head";
 
 import styles from "../../styles/Home.module.css";
 
-import Board from "../../components/board";
 import RestartElement from "../../components/restartElement";
+import Board from "../../components/board";
 
-import tools from "../../utils.ts";
-import { Card, Row } from "react-bootstrap";
-
-let { getRandomWord, playerWins, check } = tools;
+import { getRandomWord, playerWins, check } from "../../utils.ts";
 
 let word: string = "";
 let charList: string[] = [];
@@ -59,15 +58,15 @@ const Game: React.FC<{}> = () => {
 
       <main className={styles.main}>
         <h1>Bienvenu dans le jeu du pendu</h1>
-        <Card bg="secondary" style={{ maxWidth: 700 }}>
+        <p style={{ textAlign: "center", fontSize: 20 }}>
+          Vous devez deviner un mot tiré au sort parmis une liste de noms de
+          superheros et de personnages de mangas. Avec le moins de tentatives
+          possible !
+        </p>
+        <Card bg="secondary" style={{ width: "90%", maxWidth: 700 }}>
           <Card.Header>
-            <p style={{ textAlign: "center" }}>
-              Vous devez deviner un mot tiré au sort parmis une liste de noms de
-              superheros et de personnages de mangas. Avec le moins de
-              tentatives que possible !
-            </p>
             <Row style={{ justifyContent: "center", fontSize: 50 }}>
-              {charList.join(" ")}
+              {state.lose ? word : charList.join(" ")}
             </Row>
           </Card.Header>
           <Card.Body>

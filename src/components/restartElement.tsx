@@ -11,7 +11,7 @@ const RestartElement: React.FC<IRestartButtonProps> = ({
 }: IRestartButtonProps) => {
   return (
     <div>
-      <p>Vous avez {win ? "Gagné" : "Perdu"} !</p>
+      <p>{win ? "Bravo vous avez gagné !" : "Vous avez perdu !"}</p>
       <MyButton text="recommencer" onClick={click} />
     </div>
   );
