@@ -1,24 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Card, Row } from "react-bootstrap";
+import { Spinner, Card, Row } from "react-bootstrap";
 
 import Head from "next/head";
+
+import axios from "axios";
 
 import styles from "../../styles/Home.module.css";
 
 import RestartElement from "../../components/restartElement";
 import Board from "../../components/board";
 
-import { getRandomWord, playerWins, check } from "../../utils.ts";
+import { playerWins, check } from "../../utils.ts";
 
 let word: string = "";
 let charList: string[] = [];
-
-const start = (): void => {
-  const data = getRandomWord();
-  charList = data.charList;
-  word = data.word;
-};
 
 const click = (e: string, setState): void => {
   const checked = check(word, charList, e);
@@ -30,25 +26,29 @@ const click = (e: string, setState): void => {
   }));
 };
 
-const restart = (setState): void => {
-  start();
-  setState({
-    charList: charList,
-    counter: 5,
-    win: false,
-    lose: false,
-  });
+const initialState = {
+  charList: [],
+  counter: 5,
+  win: false,
+  lose: false,
 };
 
-start();
-
 const Game: React.FC<{}> = () => {
-  const [state, setState] = useState({
-    charList: [],
-    win: false,
-    lose: false,
-    counter: 5,
-  });
+  const [restart, setRestart] = useState(false);
+  const [state, setState] = useState(initialState);
+
+  useEffect(() => {
+    console.log(process.env.API_URL);
+    axios
+      .get(`api/random_word`)
+      .then((res) => {
+        word = res.data.word;
+        charList = res.data.charList;
+        console.log(word);
+        setState({ ...initialState, charList });
+      })
+      .catch((err) => console.log(err.message));
+  }, [setRestart, restart]);
 
   return (
     <div className={styles.container}>
@@ -63,20 +63,39 @@ const Game: React.FC<{}> = () => {
           superheros et de personnages de mangas. Avec le moins de tentatives
           possible !
         </p>
-        <Card bg="secondary" style={{ width: "90%", maxWidth: 700 }}>
+        <Card bg="secondary" style={{ width: "98%", maxWidth: 700 }}>
           <Card.Header>
-            <Row style={{ justifyContent: "center", fontSize: 50 }}>
-              {state.lose ? word : charList.join(" ")}
+            <Row
+              style={{
+                justifyContent: "center",
+                fontSize: 30,
+                alignItems: "center",
+              }}
+            >
+              {!word ? (
+                <>
+                  <Spinner
+                    animation="border"
+                    variant="primary"
+                    style={{ fontSize: 15 }}
+                  />
+                  &nbsp; Loading
+                </>
+              ) : state.lose ? (
+                word
+              ) : (
+                charList.join(" ")
+              )}
             </Row>
           </Card.Header>
           <Card.Body>
             {state.win || state.lose ? (
-              <Row style={{ justifyContent: "center" }}>
-                <RestartElement
-                  win={state.win}
-                  click={() => restart(setState)}
-                />
-              </Row>
+              <RestartElement
+                win={state.win}
+                click={() => {
+                  setRestart(!restart);
+                }}
+              />
             ) : (
               <>
                 <Board

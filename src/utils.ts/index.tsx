@@ -1,35 +1,3 @@
-const wordList: string[] = [
-  "spiderman",
-  "batman",
-  "superman",
-  "ironman",
-  "captainamerica",
-  "hulk",
-  "flash",
-  "arrow",
-  "naruto",
-  "goku",
-  "jotaro",
-  "dio",
-  "luffy",
-  "sanji",
-  "shanks",
-];
-
-const getRandomWord = (): { word: string; charList: string[] } => {
-  const word = wordList[
-    Math.floor((1 + Math.random() * 100) % wordList.length)
-  ].toUpperCase();
-  const charList = [];
-  for (let i = 0; i < word.length; i++) {
-    charList.push("_");
-  }
-  return {
-    word,
-    charList,
-  };
-};
-
 const check = (word: string, charList: string[], e: string): boolean => {
   let test = false;
   for (let i = 0; i < word.length; i++)
@@ -56,6 +24,6 @@ const getLetters = (): string[] => {
   return list;
 };
 
-export { getRandomWord, playerWins, getLetters, check };
+export { playerWins, getLetters, check };
 
-export default { getRandomWord, playerWins, getLetters, check };
+export default { playerWins, getLetters, check };

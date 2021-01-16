@@ -10,8 +10,16 @@ const RestartElement: React.FC<IRestartButtonProps> = ({
   click,
 }: IRestartButtonProps) => {
   return (
-    <div>
-      <p>{win ? "Bravo vous avez gagné !" : "Vous avez perdu !"}</p>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      <p style={{ textAlign: "center" }}>
+        {win ? "Bravo vous avez gagné !" : "Vous avez perdu !"}
+      </p>
       <MyButton text="recommencer" onClick={click} />
     </div>
   );
